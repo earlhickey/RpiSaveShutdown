@@ -43,7 +43,7 @@ def gpio_callback(channel):
         shutdown_pending = False  # Mark shutdown as not pending
 
 # Event detection
-GPIO.add_event_detect(18, GPIO.BOTH, callback=gpio_callback, bouncetime=500)
+GPIO.add_event_detect(18, GPIO.BOTH, callback=gpio_callback, bouncetime=1000)
 
 try:
     print("Monitoring GPIO pin 18 for state changes...")
