@@ -1,9 +1,9 @@
-name: Update Version and Timestamp
+name: Update Timestamp and create Tag
 
 on:
   push:
-    tags:
-      - 'v*'  # This triggers the action on version tag pushes
+    branches:
+      - development
 
 jobs:
   update-version:
@@ -13,17 +13,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Update version and timeStamp
+      - name: Check for changes in version
+        id: check_version
         run: |
+          # Get the latest commit hash and check if version changed
+          git fetch origin main
+          if git diff --name-only HEAD^ HEAD | grep -q "version"; then
+            echo "version.txt has changed."
+            echo "changed=true" >> $GITHUB_ENV
+          else
+            echo "version.txt has not changed."
+            echo "changed=false" >> $GITHUB_ENV
+          fi
+
+      - name: Update timestamp and create tag
+        if: env.changed == 'true'  # Only run if version has changed
+        run: |
+          # Read the current version and increment it
           current_version=$(cat version)
-          IFS='.' read -r major minor patch <<< "$current_version"
-          patch=$((patch + 1))
-          new_version="$major.$minor.$patch"
-          echo $new_version > version
+
+          # Output the Unix timestamp to timeStamp
           date -u +%s > timeStamp
 
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          git add version timeStamp
-          git commit -m "Update version to $new_version and timeStamp"
+          git add timeStamp
+          git commit -m "Update timestamp of version $current_version"
+
+      - name: Push changes to main
+        if: env.changed == 'true'  # Only run if version has changed
+        run: |
           git push
+
+      - name: Create new tag
+        if: env.changed == 'true'  # Only run if version has changed
+        run: |
+          # Create a new tag based on the updated version
+          git tag $(cat version) # Ensure the tag format is correct
+          git push origin $(cat version) # Push the new tag to the remote
