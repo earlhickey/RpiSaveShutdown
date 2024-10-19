@@ -1,4 +1,5 @@
 [MESSAGES CONTROL]
-disable=E0401  # Disable specific message codes
+disable=E0401,W0603  # Disable specific message codes
 
-# E0401 prevents: Unable to import 'RPi'
+# E0401: Unable to import 'RPi'
+# W0603: Using the global statement

@@ -1,3 +1,3 @@
 #!/bin/sh
 exec 2>&1
-exec /data/RpiSaveShutdown/RpiSaveShutdown.py
+exec /data/RpiSaveShutdown/rpi_save_shutdown.py
