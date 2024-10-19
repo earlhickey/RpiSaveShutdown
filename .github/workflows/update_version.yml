@@ -17,9 +17,9 @@ jobs:
         id: check_version
         run: |
           # Get the latest commit hash and check if version changed
-          git fetch origin main
-          if git diff --name-only HEAD^ HEAD | grep -q "version"; then
-            echo "version.txt has changed."
+          git fetch origin development
+          if git show --name-only --pretty=format: | grep -q "version"; then
+            echo "version has changed."
             echo "changed=true" >> $GITHUB_ENV
           else
             echo "version.txt has not changed."
