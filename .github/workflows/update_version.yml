@@ -1,0 +1,29 @@
+name: Update Version and Timestamp
+
+on:
+  push:
+    tags:
+      - 'v*'  # This triggers the action on version tag pushes
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Update version and timeStamp
+        run: |
+          current_version=$(cat version)
+          IFS='.' read -r major minor patch <<< "$current_version"
+          patch=$((patch + 1))
+          new_version="$major.$minor.$patch"
+          echo $new_version > version
+          date -u +%s > timeStamp
+
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add version timeStamp
+          git commit -m "Update version to $new_version and timeStamp"
+          git push
