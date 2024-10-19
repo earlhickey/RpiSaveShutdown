@@ -1,0 +1,4 @@
+[MESSAGES CONTROL]
+disable=E0401  # Disable specific message codes
+
+# E0401 prevents: Unable to import 'RPi'
