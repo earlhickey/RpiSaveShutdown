@@ -22,7 +22,7 @@ jobs:
             echo "version has changed."
             echo "changed=true" >> $GITHUB_ENV
           else
-            echo "version.txt has not changed."
+            echo "version has not changed."
             echo "changed=false" >> $GITHUB_ENV
           fi
 
